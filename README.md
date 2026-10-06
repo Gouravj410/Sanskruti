@@ -1,5 +1,9 @@
 # SANSKRUTI: Digital Cultural Art Archive & AI Intelligence Platform
 
+[![Deploy Sanskruti to GitHub Pages](https://github.com/Gouravj410/Sanskruti/actions/workflows/deploy.yml/badge.svg)](https://github.com/Gouravj410/Sanskruti/actions/workflows/deploy.yml)
+
+🌐 **Live Deployed Archive**: [https://gouravj410.github.io/Sanskruti/](https://gouravj410.github.io/Sanskruti/)
+
 Sanskriti is a digital archival platform built to preserve traditional Indian visual art forms and make their cultural knowledge accessible, discoverable, and understandable.
 
 ---
@@ -117,3 +121,18 @@ Open `http://localhost:5173` in your browser.
 5. **Ask Sanskruti (`/ask`)**: Grounded AI cultural intelligence consultation with primary source citations.
 6. **Community Desk (`/contribute`)**: Oral history and practitioner knowledge contribution portal.
 7. **Manifesto (`/about`)**: Detailed breakdown of the 4 knowledge layers and architectural principles.
+
+---
+
+## 🌐 Deployment
+
+### GitHub Pages (Frontend Live Deployment)
+- **Live URL**: [https://gouravj410.github.io/Sanskruti/](https://gouravj410.github.io/Sanskruti/)
+- **Workflow**: Automated CI/CD pipeline via [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
+- Built with high-performance Vite + React + Tailwind CSS with offline-resilient archival knowledge caching and GitHub Pages SPA routing fallback.
+
+### Containerized Full-Stack Deployment (Docker)
+To launch both frontend and backend using Docker Compose:
+```bash
+docker-compose up --build
+```
