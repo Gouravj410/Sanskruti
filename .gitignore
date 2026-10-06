@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+backend/venv/
+backend/.venv/
+__pycache__/
+*.pyc
+
+# Database & local media
+backend/sanskruti.db
+sanskruti.db
+backend/media_storage/*
+!backend/media_storage/.gitkeep
+
+# Environment files
+.env
+*.env.local
+
+# Build artifacts
+frontend/dist/
+*.log
