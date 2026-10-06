@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sanskruti - Redirecting...</title>
+    <script type="text/javascript">
+      // GitHub Pages Single Page Application redirect
+      (function () {
+        var pathSegmentsToKeep = 1; // 1 segment for repository name: /Sanskruti/
+        var l = window.location;
+        var repoName = '/Sanskruti';
+        
+        // Calculate remaining pathname after repository name
+        var pathname = l.pathname;
+        if (pathname.startsWith(repoName)) {
+          pathname = pathname.slice(repoName.length);
+        }
+        
+        // Ensure starting with slash
+        if (pathname && !pathname.startsWith('/')) {
+          pathname = '/' + pathname;
+        }
+
+        var destination =
+          l.protocol + '//' + l.host + repoName + '/#' + (pathname || '/') + l.search + l.hash;
+
+        l.replace(destination);
+      })();
+    </script>
+  </head>
+  <body style="background-color: #020617; color: #f8fafc; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0;">
+    <div style="text-align: center;">
+      <h2 style="color: #f59e0b;">Sanskruti Digital Archive</h2>
+      <p style="color: #94a3b8;">Redirecting to the requested archival record...</p>
+    </div>
+  </body>
+</html>
