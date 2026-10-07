@@ -10,8 +10,15 @@ import {
   ArrowRight,
   Info,
   Clock,
+  Key,
+  CheckCircle2,
+  XCircle,
+  Eye,
+  EyeOff,
+  Cpu,
+  Zap,
 } from 'lucide-react';
-import { api } from '../services/api';
+import { api, geminiAuth } from '../services/api';
 import { AskSanskrutiResponse, ArtFormSummary } from '../types';
 import { LayerBadge } from '../components/common/LayerBadge';
 
@@ -24,12 +31,25 @@ export const AskSanskrutiPage: React.FC = () => {
   const [selectedArtForm, setSelectedArtForm] = useState(initialArtForm);
   const [artForms, setArtForms] = useState<ArtFormSummary[]>([]);
   const [suggestedInquiries, setSuggestedInquiries] = useState<Array<{ art_form_slug: string; question: string; topic: string }>>([]);
-  
+
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState<AskSanskrutiResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Gemini API Key Modal State
+  const [showKeyModal, setShowKeyModal] = useState(false);
+  const [geminiKeyInput, setGeminiKeyInput] = useState('');
+  const [showKeyText, setShowKeyText] = useState(false);
+  const [isKeyConnected, setIsKeyConnected] = useState(false);
+  const [testStatus, setTestStatus] = useState<'idle' | 'testing' | 'success' | 'failed'>('idle');
+
   useEffect(() => {
+    const isConn = geminiAuth.isConnected();
+    setIsKeyConnected(isConn);
+    if (isConn) {
+      setGeminiKeyInput(geminiAuth.getKey());
+    }
+
     const loadContext = async () => {
       try {
         const [forms, suggestions] = await Promise.all([
@@ -76,6 +96,37 @@ export const AskSanskrutiPage: React.FC = () => {
     executeQuery(s.question, s.art_form_slug);
   };
 
+  const handleSaveGeminiKey = async () => {
+    if (!geminiKeyInput.trim()) {
+      geminiAuth.clearKey();
+      setIsKeyConnected(false);
+      setShowKeyModal(false);
+      return;
+    }
+
+    setTestStatus('testing');
+    const valid = await geminiAuth.testConnection(geminiKeyInput.trim());
+    if (valid) {
+      geminiAuth.setKey(geminiKeyInput.trim());
+      setIsKeyConnected(true);
+      setTestStatus('success');
+      setTimeout(() => {
+        setShowKeyModal(false);
+        setTestStatus('idle');
+      }, 1000);
+    } else {
+      setTestStatus('failed');
+    }
+  };
+
+  const handleDisconnectKey = () => {
+    geminiAuth.clearKey();
+    setGeminiKeyInput('');
+    setIsKeyConnected(false);
+    setTestStatus('idle');
+    setShowKeyModal(false);
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
       {/* Header */}
@@ -90,8 +141,36 @@ export const AskSanskrutiPage: React.FC = () => {
         </h1>
 
         <p className="text-sm text-slate-300 leading-relaxed">
-          Consult artificial intelligence strictly bound to cultural truth. Every response is synthesized by analyzing verified monographs, museum registers, and practitioner records—clearly cited below.
+          Consult cultural artificial intelligence strictly bound to archival truth. Every response is grounded in authentic monographs, museum registers, and living master artisan lore.
         </p>
+
+        {/* AI Engine Status & Key Toggle Bar */}
+        <div className="pt-2 flex items-center justify-center gap-3">
+          {isKeyConnected ? (
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-950/70 border border-emerald-500/40 text-emerald-300 text-xs shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="font-semibold">Google Gemini 2.0 Flash Connected</span>
+              <button
+                onClick={() => setShowKeyModal(true)}
+                className="ml-1 text-[11px] underline text-emerald-400 hover:text-emerald-200"
+              >
+                Configure
+              </button>
+            </div>
+          ) : (
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900 border border-purple-500/30 text-purple-300 text-xs shadow-sm">
+              <Cpu className="w-3.5 h-3.5 text-amber-400" />
+              <span>Sanskruti Archival RAG Active</span>
+              <button
+                onClick={() => setShowKeyModal(true)}
+                className="ml-2 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-purple-600 hover:bg-purple-500 text-white font-medium text-[11px] transition-colors"
+              >
+                <Zap className="w-3 h-3" />
+                <span>Connect Gemini API</span>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Query Formulation Form */}
@@ -166,118 +245,256 @@ export const AskSanskrutiPage: React.FC = () => {
 
       {/* Error state */}
       {error && (
-        <div className="p-4 rounded-xl bg-rose-950/40 border border-rose-500/40 text-rose-300 text-xs text-center">
-          {error}
+        <div className="p-4 rounded-xl bg-rose-950/50 border border-rose-500/50 text-rose-200 text-xs flex items-center gap-2">
+          <Info className="w-4 h-4 shrink-0 text-rose-400" />
+          <span>{error}</span>
         </div>
       )}
 
-      {/* Loading state */}
-      {loading && (
-        <div className="p-12 text-center space-y-3">
-          <div className="w-8 h-8 border-2 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="font-serif text-slate-200 text-base">
-            Consulting Digital Archive & Synthesizing Cultural Context...
-          </p>
-          <p className="text-xs text-slate-500">
-            Retrieving verified monographs, canonical motifs, and museum records.
-          </p>
-        </div>
-      )}
+      {/* AI Consultation Response Sheet */}
+      {response && (
+        <div className="space-y-8 animate-fade-in">
+          {/* Main Answer Card */}
+          <div className="p-8 rounded-3xl bg-slate-900 border border-purple-500/40 shadow-cultural-lg space-y-6 relative overflow-hidden">
+            {/* Top metadata row */}
+            <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
+              <div className="flex items-center gap-3">
+                <LayerBadge layer={response.information_layer} size="md" />
+                <span className="text-xs font-mono text-purple-300/80 bg-purple-950/40 px-2.5 py-1 rounded border border-purple-500/20">
+                  Model: {response.model_used}
+                </span>
+              </div>
 
-      {/* Structured AI Response Display */}
-      {response && !loading && (
-        <div className="p-8 sm:p-10 rounded-3xl bg-slate-900/90 border border-purple-500/40 shadow-cultural-lg space-y-8 animate-in fade-in duration-300">
-          
-          {/* Top metadata bar */}
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4">
-            <div className="flex items-center gap-3">
-              <LayerBadge layer={response.information_layer} size="md" />
-              <span className="text-xs font-mono text-slate-400">
-                Engine: {response.model_used}
-              </span>
+              {response.context_art_form && (
+                <span className="text-xs text-amber-300 font-serif font-medium bg-amber-950/40 px-3 py-1 rounded-full border border-amber-500/30">
+                  Grounding Scope: {response.context_art_form}
+                </span>
+              )}
             </div>
 
-            <div className="flex items-center gap-2 text-xs text-emerald-400 font-semibold bg-emerald-950/50 px-3 py-1 rounded-full border border-emerald-500/30">
-              <ShieldCheck className="w-4 h-4" />
-              <span>Grounded in Digital Archive</span>
-            </div>
-          </div>
-
-          {/* User question */}
-          <div>
-            <span className="text-[11px] uppercase tracking-wider text-slate-400 font-bold block mb-1">
-              Inquiry Context:
-            </span>
-            <h2 className="font-serif text-xl sm:text-2xl font-bold text-amber-200">
+            {/* Inquired Question */}
+            <h2 className="font-serif text-2xl font-bold text-slate-100">
               "{response.question}"
             </h2>
+
+            {/* Answer Content */}
+            <div className="prose prose-invert max-w-none text-slate-200 leading-relaxed text-sm space-y-4 whitespace-pre-wrap">
+              {response.answer}
+            </div>
+
+            {/* Epistemic Integrity Disclaimer */}
+            <div className="p-3.5 rounded-xl bg-purple-950/30 border border-purple-500/20 text-xs text-purple-200/80 flex items-start gap-2.5">
+              <ShieldCheck className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
+              <span>{response.disclaimer}</span>
+            </div>
           </div>
 
-          {/* Formatted Answer Body */}
-          <div className="text-sm text-slate-200 leading-relaxed whitespace-pre-line font-sans space-y-4 border-l-2 border-purple-500/40 pl-5 py-1">
-            {response.answer}
-          </div>
-
-          {/* Grounded Academic Citations */}
+          {/* Grounded Primary Archival Citations (Layer A) */}
           {response.sources_cited && response.sources_cited.length > 0 && (
-            <div className="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
-              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-400">
-                <BookOpen className="w-4 h-4" />
-                <span>Verified Archival Sources Cited in this Synthesis:</span>
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <BookOpen className="w-4 h-4 text-amber-400" />
+                <h3 className="font-serif text-lg font-bold text-slate-100">
+                  Primary Archival Sources Cited (Layer A)
+                </h3>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                {response.sources_cited.map((src, i) => (
-                  <div key={i} className="p-3 rounded-xl bg-slate-900 border border-slate-800/80">
-                    <span className="font-bold text-slate-200 block">{src.title}</span>
-                    <span className="text-slate-400 text-[11px] block mt-0.5">
-                      {src.author || 'Archival Board'} ({src.year || 'Historic'}) • {src.archive_institution || 'Archive'}
-                    </span>
-                    <span className="text-[10px] text-emerald-400 font-medium inline-block mt-1">
-                      ✓ Primary Source
-                    </span>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {response.sources_cited.map((citation, idx) => (
+                  <div
+                    key={idx}
+                    className="p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-500/30 transition-all space-y-2"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <span className="text-xs font-bold text-amber-200 leading-snug">
+                        {citation.title}
+                      </span>
+                      <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-slate-800 text-slate-300 shrink-0">
+                        {citation.citation_type || 'Monograph'}
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-slate-400">
+                      {citation.author && <span>{citation.author}</span>}
+                      {citation.year && <span> ({citation.year})</span>}
+                    </p>
+
+                    {citation.archive_institution && (
+                      <div className="text-[11px] text-amber-400/80 font-medium">
+                        Institution: {citation.archive_institution}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          {/* Grounded Artifacts References */}
+          {/* Grounded Artifacts Referenced */}
           {response.grounded_artifacts && response.grounded_artifacts.length > 0 && (
-            <div className="space-y-3">
-              <span className="text-xs uppercase font-bold tracking-wider text-slate-300 block">
-                Archival Records Consulted:
-              </span>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                {response.grounded_artifacts.map((ref) => (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-purple-400" />
+                <h3 className="font-serif text-lg font-bold text-slate-100">
+                  Referenced Archival Artifacts
+                </h3>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {response.grounded_artifacts.map((art) => (
                   <Link
-                    key={ref.id}
-                    to={`/artifacts/${ref.id}`}
-                    className="p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-amber-500/40 flex items-center gap-3 group transition-all"
+                    key={art.id}
+                    to={`/artifacts/${art.id}`}
+                    className="group block rounded-xl overflow-hidden bg-slate-900 border border-slate-800 hover:border-purple-500/40 transition-all p-3 space-y-2.5"
                   >
-                    <img
-                      src={ref.image_url}
-                      alt={ref.title}
-                      className="w-12 h-12 object-cover rounded-lg shrink-0"
-                    />
-                    <div className="overflow-hidden">
-                      <span className="font-mono text-[10px] text-amber-400 block">
-                        {ref.accession_number}
+                    <div className="h-32 w-full overflow-hidden rounded-lg bg-slate-950 relative">
+                      <img
+                        src={art.image_url}
+                        alt={art.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <span className="absolute top-2 left-2 text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-950/80 text-amber-300">
+                        {art.accession_number}
                       </span>
-                      <span className="text-xs font-medium text-slate-200 group-hover:text-amber-300 truncate block">
-                        {ref.title}
-                      </span>
+                    </div>
+
+                    <div>
+                      <h4 className="text-xs font-bold text-slate-200 group-hover:text-purple-300 transition-colors line-clamp-1">
+                        {art.title}
+                      </h4>
+                      <p className="text-[11px] text-slate-400 mt-0.5">
+                        {art.art_form_name}
+                      </p>
                     </div>
                   </Link>
                 ))}
               </div>
             </div>
           )}
+        </div>
+      )}
 
-          {/* Mandatory Epistemic Disclaimer */}
-          <div className="pt-4 border-t border-slate-800 text-[11px] text-slate-500 italic leading-relaxed">
-            {response.disclaimer}
+      {/* Gemini API Key Configuration Modal */}
+      {showKeyModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+          <div className="bg-slate-900 border border-purple-500/40 rounded-3xl p-6 sm:p-8 max-w-lg w-full space-y-6 shadow-2xl relative animate-fade-in">
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-purple-950 border border-purple-500/40 flex items-center justify-center">
+                  <Key className="w-5 h-5 text-purple-400" />
+                </div>
+                <div>
+                  <h3 className="font-serif text-xl font-bold text-slate-100">
+                    Connect Gemini API
+                  </h3>
+                  <p className="text-xs text-slate-400">
+                    Live Generative Intelligence Grounded in Sanskriti Archive
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowKeyModal(false)}
+                className="text-slate-400 hover:text-slate-200 text-lg p-1"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-300 space-y-2">
+                <p>
+                  You can get a free, instantaneous Gemini API key directly from Google AI Studio:
+                </p>
+                <a
+                  href="https://aistudio.google.com/apikey"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-purple-400 hover:text-purple-300 font-semibold underline"
+                >
+                  <span>Google AI Studio Key Portal</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+                <p className="text-[11px] text-slate-500">
+                  Your key is saved locally in your browser's private storage and is never exposed or sent to third parties.
+                </p>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-300">
+                  Google Gemini API Key:
+                </label>
+                <div className="relative">
+                  <input
+                    type={showKeyText ? 'text' : 'password'}
+                    value={geminiKeyInput}
+                    onChange={(e) => setGeminiKeyInput(e.target.value)}
+                    placeholder="AIzaSy..."
+                    className="w-full pr-10 pl-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-purple-400"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowKeyText(!showKeyText)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+                  >
+                    {showKeyText ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              {testStatus === 'success' && (
+                <div className="flex items-center gap-2 text-xs text-emerald-400 bg-emerald-950/40 p-2.5 rounded-lg border border-emerald-500/30">
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>Connection verified! Google Gemini 2.0 Flash is ready.</span>
+                </div>
+              )}
+
+              {testStatus === 'failed' && (
+                <div className="flex items-center gap-2 text-xs text-rose-400 bg-rose-950/40 p-2.5 rounded-lg border border-rose-500/30">
+                  <XCircle className="w-4 h-4" />
+                  <span>Could not verify key. Please check key validity and quota.</span>
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center justify-between gap-3 pt-2">
+              {isKeyConnected ? (
+                <button
+                  type="button"
+                  onClick={handleDisconnectKey}
+                  className="px-4 py-2 rounded-xl text-rose-400 hover:bg-rose-950/40 text-xs font-semibold transition-colors"
+                >
+                  Disconnect Key
+                </button>
+              ) : (
+                <div />
+              )}
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowKeyModal(false)}
+                  className="px-4 py-2 rounded-xl text-slate-400 hover:text-slate-200 text-xs font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSaveGeminiKey}
+                  disabled={testStatus === 'testing'}
+                  className="px-5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow-md transition-all flex items-center gap-1.5"
+                >
+                  {testStatus === 'testing' ? (
+                    <span>Verifying...</span>
+                  ) : (
+                    <>
+                      <Zap className="w-3.5 h-3.5" />
+                      <span>Test & Save Connection</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
           </div>
-
         </div>
       )}
     </div>

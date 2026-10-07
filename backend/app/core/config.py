@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     
     # Gemini AI Configuration
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
-    GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+    GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
     
     # Media Storage Configuration
     MEDIA_STORAGE_DIR: str = os.getenv("MEDIA_STORAGE_DIR", str(BASE_DIR / "media_storage"))

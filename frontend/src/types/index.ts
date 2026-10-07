@@ -47,6 +47,7 @@ export interface ArtFormSummary {
   summary: string;
   preservation_status: PreservationStatus;
   cover_image_url: string;
+  banner_image_url?: string;
   artifact_count?: number;
 }
 
@@ -78,6 +79,7 @@ export interface ArtifactSummary {
   region_origin: string;
   medium: string;
   image_url: string;
+  thumbnail_url?: string;
   is_featured: boolean;
   tags: string[];
 }

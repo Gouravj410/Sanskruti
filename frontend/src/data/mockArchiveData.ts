@@ -96,8 +96,8 @@ export const MOCK_ARCHIVE_DATA = {
           "isbn_or_url": "Computer Graphics and Image Processing 3(1)"
         }
       ],
-      "cover_image_url": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1200&q=80",
-      "banner_image_url": "https://images.unsplash.com/photo-1582738411706-bfc8e691d1c2?auto=format&fit=crop&w=1600&q=80",
+      "cover_image_url": "images/art-forms/kolam.jpg",
+      "banner_image_url": "images/art-forms/kolam.jpg",
       "created_at": "2026-10-06 19:12:34.388982",
       "updated_at": "2026-10-06 19:12:34.388982",
       "artifact_count": 3,
@@ -204,8 +204,8 @@ export const MOCK_ARCHIVE_DATA = {
           "isbn_or_url": "IGNCA-Mural-Doc-2004"
         }
       ],
-      "cover_image_url": "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=1200&q=80",
-      "banner_image_url": "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1600&q=80",
+      "cover_image_url": "images/art-forms/warli.jpg",
+      "banner_image_url": "images/art-forms/warli.jpg",
       "created_at": "2026-10-06 19:12:34.391712",
       "updated_at": "2026-10-06 19:12:34.391712",
       "artifact_count": 3,
@@ -312,8 +312,8 @@ export const MOCK_ARCHIVE_DATA = {
           "isbn_or_url": "ISBN 978-0500271094"
         }
       ],
-      "cover_image_url": "https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=1200&q=80",
-      "banner_image_url": "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1600&q=80",
+      "cover_image_url": "images/art-forms/madhubani.jpg",
+      "banner_image_url": "images/art-forms/madhubani.jpg",
       "created_at": "2026-10-06 19:12:34.391712",
       "updated_at": "2026-10-06 19:12:34.391712",
       "artifact_count": 3,
@@ -420,8 +420,8 @@ export const MOCK_ARCHIVE_DATA = {
           "isbn_or_url": "NM-FOLK-1979"
         }
       ],
-      "cover_image_url": "https://images.unsplash.com/photo-1579783901586-d88db74b4fe4?auto=format&fit=crop&w=1200&q=80",
-      "banner_image_url": "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1600&q=80",
+      "cover_image_url": "images/art-forms/mandana.jpg",
+      "banner_image_url": "images/art-forms/mandana.jpg",
       "created_at": "2026-10-06 19:12:34.392422",
       "updated_at": "2026-10-06 19:12:34.392422",
       "artifact_count": 1,
@@ -528,8 +528,8 @@ export const MOCK_ARCHIVE_DATA = {
           "isbn_or_url": "OUP-ELWIN-51"
         }
       ],
-      "cover_image_url": "https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=1200&q=80",
-      "banner_image_url": "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1600&q=80",
+      "cover_image_url": "images/art-forms/gond.jpg",
+      "banner_image_url": "images/art-forms/gond.jpg",
       "created_at": "2026-10-06 19:12:34.392422",
       "updated_at": "2026-10-06 19:12:34.392422",
       "artifact_count": 1,
@@ -641,8 +641,8 @@ export const MOCK_ARCHIVE_DATA = {
           "isbn_or_url": "CALICO-PATTA-1980"
         }
       ],
-      "cover_image_url": "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=1200&q=80",
-      "banner_image_url": "https://images.unsplash.com/photo-1582738411706-bfc8e691d1c2?auto=format&fit=crop&w=1600&q=80",
+      "cover_image_url": "images/art-forms/pattachitra.jpg",
+      "banner_image_url": "images/art-forms/pattachitra.jpg",
       "created_at": "2026-10-06 19:12:34.393074",
       "updated_at": "2026-10-06 19:12:34.393074",
       "artifact_count": 1,
@@ -755,8 +755,8 @@ export const MOCK_ARCHIVE_DATA = {
           "isbn_or_url": "ISBN 978-0195617061"
         }
       ],
-      "cover_image_url": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
-      "banner_image_url": "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=1600&q=80",
+      "cover_image_url": "images/art-forms/kalamkari.jpg",
+      "banner_image_url": "images/art-forms/kalamkari.jpg",
       "created_at": "2026-10-06 19:12:34.393074",
       "updated_at": "2026-10-06 19:12:34.393074",
       "artifact_count": 1,
@@ -862,8 +862,8 @@ export const MOCK_ARCHIVE_DATA = {
           "isbn_or_url": "IGNCA-PHAD-2002"
         }
       ],
-      "cover_image_url": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1200&q=80",
-      "banner_image_url": "https://images.unsplash.com/photo-1582738411706-bfc8e691d1c2?auto=format&fit=crop&w=1600&q=80",
+      "cover_image_url": "images/art-forms/phad.jpg",
+      "banner_image_url": "images/art-forms/phad.jpg",
       "created_at": "2026-10-06 19:12:34.393074",
       "updated_at": "2026-10-06 19:12:34.393074",
       "artifact_count": 1,
@@ -892,7 +892,7 @@ export const MOCK_ARCHIVE_DATA = {
       "iconography_analysis": "Topologically corresponds to a complete Eulerian cycle. Reflects Tamil Vaishnava and Shaiva philosophies of beginningless time (Anadi) and non-dual infinity.",
       "provenance": "Documented in Madras Christian College ethnomathematics field archive (Prof. Gift Siromoney collection).",
       "verification_source": "Madras Christian College Department of Statistics Archival Register #MCC-74-KOL-12",
-      "image_url": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+      "image_url": "images/art-forms/kolam.jpg",
       "thumbnail_url": null,
       "tags": [
         "Sacred Geometry",
@@ -926,7 +926,7 @@ export const MOCK_ARCHIVE_DATA = {
       "iconography_analysis": "Symbolizes the spiritual heart chakra (Anahata) and the eight manifestations of Lakshmi (Ashta Lakshmi).",
       "provenance": "Crafts Council of India Traditional Threshold Survey.",
       "verification_source": "Crafts Council of India Documentation Register Vol. IV",
-      "image_url": "https://images.unsplash.com/photo-1582738411706-bfc8e691d1c2?auto=format&fit=crop&w=800&q=80",
+      "image_url": "images/art-forms/kolam.jpg",
       "thumbnail_url": null,
       "tags": [
         "Lotus Motif",
@@ -961,7 +961,7 @@ export const MOCK_ARCHIVE_DATA = {
       "iconography_analysis": "The central square symbolizes sacred order amidst wild nature; the absence of individual facial features underscores the collective community identity of the tribe.",
       "provenance": "Acquired from the artist's studio in Kalambipada, Dahanu during the National Master Craftsman Survey.",
       "verification_source": "National Handicrafts and Handlooms Museum (National Crafts Museum, New Delhi) Catalog #NM-WRL-1978-04",
-      "image_url": "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=800&q=80",
+      "image_url": "images/art-forms/warli.jpg",
       "thumbnail_url": null,
       "tags": [
         "Marriage Chowk",
@@ -996,7 +996,7 @@ export const MOCK_ARCHIVE_DATA = {
       "iconography_analysis": "Centripetal spiral motion mirrors the celestial movement of stars and the cyclical agricultural calendar.",
       "provenance": "Lalit Kala Akademi Western Regional Exhibition Archive.",
       "verification_source": "Lalit Kala Akademi Permanent Tribal Collection #LKA-1985-WRL",
-      "image_url": "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80",
+      "image_url": "images/art-forms/warli.jpg",
       "thumbnail_url": null,
       "tags": [
         "Tarpa Dance",
@@ -1031,7 +1031,7 @@ export const MOCK_ARCHIVE_DATA = {
       "iconography_analysis": "Cosmological fertility diagram ensuring lineage continuity and divine protection for newlyweds.",
       "provenance": "Commissioned during the All India Handicrafts Board drought relief revival led by Pupul Jayakar.",
       "verification_source": "All India Handicrafts Board Archival Register #AIHB-MDB-72-108",
-      "image_url": "https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=800&q=80",
+      "image_url": "images/art-forms/madhubani.jpg",
       "thumbnail_url": null,
       "tags": [
         "Kohbar",
@@ -1066,7 +1066,7 @@ export const MOCK_ARCHIVE_DATA = {
       "iconography_analysis": "Demonstrates the extreme microscopic precision of Katchni hatching, where no solid colors are used—only tone created through line density.",
       "provenance": "Ranti Master Artisan Trust Archive.",
       "verification_source": "Bihar State Crafts Council Monograph Series #BCC-MDB-80",
-      "image_url": "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80",
+      "image_url": "images/art-forms/madhubani.jpg",
       "thumbnail_url": null,
       "tags": [
         "Katchni Line",
@@ -1100,7 +1100,7 @@ export const MOCK_ARCHIVE_DATA = {
       "iconography_analysis": "Yantric protective diagram combining cardinal compass alignments with solar invocations.",
       "provenance": "Indira Gandhi National Centre for the Arts field survey in Hadoti.",
       "verification_source": "IGNCA Archival Register #IGNCA-RAJ-MND-92",
-      "image_url": "https://images.unsplash.com/photo-1579783901586-d88db74b4fe4?auto=format&fit=crop&w=800&q=80",
+      "image_url": "images/art-forms/mandana.jpg",
       "thumbnail_url": null,
       "tags": [
         "Diwali Ritual",
@@ -1136,7 +1136,7 @@ export const MOCK_ARCHIVE_DATA = {
       "iconography_analysis": "Visual manifestation of the Pardhan Gond song of creation, where the world emerged from primordial water through the cooperation of a crow and a worm.",
       "provenance": "Bharat Bhavan Bhopal Permanent Collection.",
       "verification_source": "Roopankar Museum of Fine Arts, Bharat Bhavan Archive #BB-R-89-GND-01",
-      "image_url": "https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=800&q=80",
+      "image_url": "images/art-forms/gond.jpg",
       "thumbnail_url": null,
       "tags": [
         "Jangarh Kalam",
@@ -1173,7 +1173,7 @@ export const MOCK_ARCHIVE_DATA = {
       "iconography_analysis": "Illustrates the philosophical synthesis of all earthly life forms in the singular body of God.",
       "provenance": "Odisha State Crafts Museum (Kala Bhoomi) Historic Archive.",
       "verification_source": "Kala Bhoomi Crafts Museum Accession #KB-PAT-1968-07",
-      "image_url": "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=800&q=80",
+      "image_url": "images/art-forms/pattachitra.jpg",
       "thumbnail_url": null,
       "tags": [
         "Navagunjara",
@@ -1210,7 +1210,7 @@ export const MOCK_ARCHIVE_DATA = {
       "iconography_analysis": "Combines ancient Chola sacred iconography with organic indigo and madder dyeing techniques.",
       "provenance": "Crafts Council of Andhra Pradesh Master Collection.",
       "verification_source": "National Crafts Museum New Delhi Permanent Kalamkari Archive #NCM-KLM-1975-01",
-      "image_url": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
+      "image_url": "images/art-forms/kalamkari.jpg",
       "thumbnail_url": null,
       "tags": [
         "Tree of Life",
@@ -1247,7 +1247,7 @@ export const MOCK_ARCHIVE_DATA = {
       "iconography_analysis": "The largest portable temple scroll tradition in South Asia, structured spatially rather than chronologically: the hero sits at the center while simultaneous events unfold across the entire canvas.",
       "provenance": "Commissioned for the National Folklore Documentation Project.",
       "verification_source": "Sangeet Natak Akademi Folk Arts Archive #SNA-PHD-70-01",
-      "image_url": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+      "image_url": "images/art-forms/phad.jpg",
       "thumbnail_url": null,
       "tags": [
         "Pabuji Epic",
@@ -1282,7 +1282,7 @@ export const MOCK_ARCHIVE_DATA = {
       "iconography_analysis": "Practitioner oral interpretation reflecting contemporary environmental concerns through ancient Mithila visual syntax.",
       "provenance": "Submitted directly to Sanskruti Community Practitioner Desk by Jitwarpur Mahila Kalakar Sangh.",
       "verification_source": "Community Field Vetting #COM-JIT-2024-03",
-      "image_url": "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80",
+      "image_url": "images/art-forms/madhubani.jpg",
       "thumbnail_url": null,
       "tags": [
         "Community Knowledge",
@@ -1315,7 +1315,7 @@ export const MOCK_ARCHIVE_DATA = {
       "iconography_analysis": "Passed down verbally for four generations without written grids, demonstrating procedural memory in domestic arts.",
       "provenance": "Contributed via Sanskruti Oral History Archive by practitioner family.",
       "verification_source": "Practitioner Oral Submission #COM-TN-KOL-2024",
-      "image_url": "https://images.unsplash.com/photo-1582738411706-bfc8e691d1c2?auto=format&fit=crop&w=800&q=80",
+      "image_url": "images/art-forms/kolam.jpg",
       "thumbnail_url": null,
       "tags": [
         "Community Knowledge",
@@ -1348,7 +1348,7 @@ export const MOCK_ARCHIVE_DATA = {
       "iconography_analysis": "Reveals that human spacing expands at outer rims and tightens predictably at the inner sanctum, corroborating tribal acoustic pacing.",
       "provenance": "Synthesized by Sanskruti Intelligence Engine using verified photographs from IGNCA archive.",
       "verification_source": "Sanskruti AI Analysis Log #AI-AN-2026-WRL-01",
-      "image_url": "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=800&q=80",
+      "image_url": "images/art-forms/warli.jpg",
       "thumbnail_url": null,
       "tags": [
         "AI Cultural Interpretation",
