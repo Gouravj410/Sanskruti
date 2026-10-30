@@ -19,7 +19,13 @@ class PractitionerEntry(Base):
     media_url = Column(String(500), nullable=True)
     
     information_layer = Column(String(50), nullable=False, default=InformationLayer.COMMUNITY.value)
-    verification_status = Column(String(50), nullable=False, default=VerificationStatus.COMMUNITY_VETTED.value)
+    verification_status = Column(String(50), nullable=False, default=VerificationStatus.PENDING_REVIEW.value, index=True)
+    
+    # Curation & Provenance Review Fields
+    curator_notes = Column(Text, nullable=True)
+    reviewed_at = Column(DateTime, nullable=True)
+    reviewed_by = Column(String(100), nullable=True)
+    published_at = Column(DateTime, nullable=True)
     
     created_at = Column(DateTime, default=datetime.utcnow)
 

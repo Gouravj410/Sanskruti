@@ -22,7 +22,18 @@ class PractitionerEntryResponse(PractitionerEntryBase):
     art_form_slug: Optional[str] = None
     information_layer: str
     verification_status: str
+    curator_notes: Optional[str] = None
+    reviewed_at: Optional[datetime] = None
+    reviewed_by: Optional[str] = None
+    published_at: Optional[datetime] = None
     created_at: datetime
 
     class Config:
         from_attributes = True
+
+class PractitionerReviewRequest(BaseModel):
+    action: Optional[str] = None  # e.g. "APPROVE", "PUBLISH", "REJECT", "ARCHIVE"
+    status: Optional[str] = None  # e.g. "APPROVED", "PUBLISHED", "REJECTED", "ARCHIVED"
+    curator_notes: Optional[str] = None
+    reviewer_name: Optional[str] = None
+    reviewed_by: Optional[str] = None

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Users, ShieldCheck, HeartHandshake, CheckCircle2, Sparkles, Send } from 'lucide-react';
+import { Users, HeartHandshake, CheckCircle2, Send } from 'lucide-react';
 import { api } from '../services/api';
 import { ArtFormSummary, PractitionerEntry } from '../types';
 import { LayerBadge } from '../components/common/LayerBadge';
@@ -64,14 +64,18 @@ export const ContributePage: React.FC = () => {
         media_url: mediaUrl || undefined,
       });
 
-      setSuccessMessage(`Contribution '${created.title}' recorded under Layer B (Practitioner Knowledge) for archival review.`);
+      setSuccessMessage(
+        `Contribution "${created.title}" successfully recorded with status PENDING REVIEW. It will be reviewed by authorized curators before public display.`
+      );
       // Reset form
       setTitle('');
       setContent('');
       setMediaUrl('');
-      // Reload list
-      const updatedEntries = await api.getPractitioners();
-      setPractitionerEntries(updatedEntries);
+      // Reload published list
+      try {
+        const updatedEntries = await api.getPractitioners();
+        setPractitionerEntries(updatedEntries);
+      } catch {}
     } catch (err: any) {
       setErrorMessage(err.message || 'Submission failed.');
     } finally {

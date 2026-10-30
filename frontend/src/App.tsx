@@ -9,6 +9,7 @@ import { ArtifactDetailPage } from './pages/ArtifactDetailPage';
 import { AskSanskrutiPage } from './pages/AskSanskrutiPage';
 import { ContributePage } from './pages/ContributePage';
 import { AboutPage } from './pages/AboutPage';
+import { CuratorPage } from './pages/CuratorPage';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             <Route path="/ask" element={<AskSanskrutiPage />} />
             <Route path="/contribute" element={<ContributePage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/curator" element={<CuratorPage />} />
           </Routes>
         </main>
         <Footer />

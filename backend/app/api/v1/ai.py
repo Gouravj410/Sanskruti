@@ -21,7 +21,8 @@ async def ask_sanskruti(
         response = await AIService.ask_sanskruti(
             db=db,
             question=req.question,
-            art_form_slug=req.art_form_slug
+            art_form_slug=req.art_form_slug,
+            gemini_api_key=req.gemini_api_key
         )
         return response
     except Exception as e:

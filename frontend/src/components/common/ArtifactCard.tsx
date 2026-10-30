@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Tag, Sparkles, User, Calendar, ExternalLink } from 'lucide-react';
+import { User, Calendar, ExternalLink } from 'lucide-react';
 import { ArtifactSummary } from '../../types';
 import { LayerBadge } from './LayerBadge';
 

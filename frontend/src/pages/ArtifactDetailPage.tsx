@@ -2,14 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   ShieldCheck,
-  MapPin,
-  Calendar,
-  User,
-  Tag,
-  BookOpen,
   Sparkles,
   ArrowLeft,
-  Share2,
   ExternalLink,
 } from 'lucide-react';
 import { api } from '../services/api';

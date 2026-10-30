@@ -19,10 +19,7 @@ def seed_database():
 
     try:
         # Check if already seeded
-        existing_count = db.query(ArtForm).count()
-        if existing_count > 0:
-            print(f"Archive already contains {existing_count} art forms. Checking if update is needed...")
-            return
+        print("Ensuring database schema and idempotently synchronizing authentic cultural art forms and records...")
 
         print("Seeding authentic cultural art forms and verified archival records...")
 
@@ -117,8 +114,8 @@ def seed_database():
                         "isbn_or_url": "Computer Graphics and Image Processing 3(1)"
                     }
                 ],
-                "cover_image_url": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1200&q=80",
-                "banner_image_url": "https://images.unsplash.com/photo-1582738411706-bfc8e691d1c2?auto=format&fit=crop&w=1600&q=80"
+                "cover_image_url": "images/art-forms/kolam.jpg",
+                "banner_image_url": "images/art-forms/kolam.jpg"
             },
             {
                 "slug": "warli",
@@ -217,8 +214,8 @@ def seed_database():
                         "isbn_or_url": "IGNCA-Mural-Doc-2004"
                     }
                 ],
-                "cover_image_url": "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=1200&q=80",
-                "banner_image_url": "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1600&q=80"
+                "cover_image_url": "images/art-forms/warli.jpg",
+                "banner_image_url": "images/art-forms/warli.jpg"
             },
             {
                 "slug": "madhubani",
@@ -317,8 +314,8 @@ def seed_database():
                         "isbn_or_url": "ISBN 978-0500271094"
                     }
                 ],
-                "cover_image_url": "https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=1200&q=80",
-                "banner_image_url": "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1600&q=80"
+                "cover_image_url": "images/art-forms/madhubani.jpg",
+                "banner_image_url": "images/art-forms/madhubani.jpg"
             },
             {
                 "slug": "mandana",
@@ -417,8 +414,8 @@ def seed_database():
                         "isbn_or_url": "NM-FOLK-1979"
                     }
                 ],
-                "cover_image_url": "https://images.unsplash.com/photo-1579783901586-d88db74b4fe4?auto=format&fit=crop&w=1200&q=80",
-                "banner_image_url": "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1600&q=80"
+                "cover_image_url": "images/art-forms/mandana.jpg",
+                "banner_image_url": "images/art-forms/mandana.jpg"
             },
             {
                 "slug": "gond",
@@ -517,8 +514,8 @@ def seed_database():
                         "isbn_or_url": "OUP-ELWIN-51"
                     }
                 ],
-                "cover_image_url": "https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=1200&q=80",
-                "banner_image_url": "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1600&q=80"
+                "cover_image_url": "images/art-forms/gond.jpg",
+                "banner_image_url": "images/art-forms/gond.jpg"
             },
             {
                 "slug": "pattachitra",
@@ -623,8 +620,8 @@ def seed_database():
                         "isbn_or_url": "CALICO-PATTA-1980"
                     }
                 ],
-                "cover_image_url": "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=1200&q=80",
-                "banner_image_url": "https://images.unsplash.com/photo-1582738411706-bfc8e691d1c2?auto=format&fit=crop&w=1600&q=80"
+                "cover_image_url": "images/art-forms/pattachitra.jpg",
+                "banner_image_url": "images/art-forms/pattachitra.jpg"
             },
             {
                 "slug": "kalamkari",
@@ -729,8 +726,8 @@ def seed_database():
                         "isbn_or_url": "ISBN 978-0195617061"
                     }
                 ],
-                "cover_image_url": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
-                "banner_image_url": "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=1600&q=80"
+                "cover_image_url": "images/art-forms/kalamkari.jpg",
+                "banner_image_url": "images/art-forms/kalamkari.jpg"
             },
             {
                 "slug": "phad",
@@ -829,19 +826,29 @@ def seed_database():
                         "isbn_or_url": "IGNCA-PHAD-2002"
                     }
                 ],
-                "cover_image_url": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1200&q=80",
-                "banner_image_url": "https://images.unsplash.com/photo-1582738411706-bfc8e691d1c2?auto=format&fit=crop&w=1600&q=80"
+                "cover_image_url": "images/art-forms/phad.jpg",
+                "banner_image_url": "images/art-forms/phad.jpg"
             }
         ]
 
         # Insert Art Forms
+        # Insert or update Art Forms idempotently
         inserted_art_forms = {}
         for af_data in art_forms_data:
-            art_form = ArtForm(**af_data)
-            db.add(art_form)
-            db.flush()
-            inserted_art_forms[art_form.slug] = art_form
-            print(f"Added art form: {art_form.name}")
+            slug = af_data["slug"]
+            existing = db.query(ArtForm).filter(ArtForm.slug == slug).first()
+            if existing:
+                for k, v in af_data.items():
+                    setattr(existing, k, v)
+                inserted_art_forms[slug] = existing
+                print(f"Updated art form: {existing.name} ({slug})")
+            else:
+                art_form = ArtForm(**af_data)
+                db.add(art_form)
+                db.flush()
+                inserted_art_forms[slug] = art_form
+                print(f"Created art form: {art_form.name} ({slug})")
+        db.flush()
 
         # Now insert authentic Archival Artifacts cataloged across the 4 Information Layers
         artifacts_data = [
@@ -862,7 +869,7 @@ def seed_database():
                 "iconography_analysis": "Topologically corresponds to a complete Eulerian cycle. Reflects Tamil Vaishnava and Shaiva philosophies of beginningless time (Anadi) and non-dual infinity.",
                 "provenance": "Documented in Madras Christian College ethnomathematics field archive (Prof. Gift Siromoney collection).",
                 "verification_source": "Madras Christian College Department of Statistics Archival Register #MCC-74-KOL-12",
-                "image_url": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                "image_url": "images/art-forms/kolam.jpg",
                 "tags": ["Sacred Geometry", "Margazhi Festival", "Topological Knot", "Threshold Art"],
                 "is_featured": True
             },
@@ -882,7 +889,7 @@ def seed_database():
                 "iconography_analysis": "Symbolizes the spiritual heart chakra (Anahata) and the eight manifestations of Lakshmi (Ashta Lakshmi).",
                 "provenance": "Crafts Council of India Traditional Threshold Survey.",
                 "verification_source": "Crafts Council of India Documentation Register Vol. IV",
-                "image_url": "https://images.unsplash.com/photo-1582738411706-bfc8e691d1c2?auto=format&fit=crop&w=800&q=80",
+                "image_url": "images/art-forms/kolam.jpg",
                 "tags": ["Lotus Motif", "Lakshmi Puja", "Radial Symmetry"],
                 "is_featured": False
             },
@@ -903,7 +910,7 @@ def seed_database():
                 "iconography_analysis": "The central square symbolizes sacred order amidst wild nature; the absence of individual facial features underscores the collective community identity of the tribe.",
                 "provenance": "Acquired from the artist's studio in Kalambipada, Dahanu during the National Master Craftsman Survey.",
                 "verification_source": "National Handicrafts and Handlooms Museum (National Crafts Museum, New Delhi) Catalog #NM-WRL-1978-04",
-                "image_url": "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=800&q=80",
+                "image_url": "images/art-forms/warli.jpg",
                 "tags": ["Marriage Chowk", "Goddess Palghat", "Jivya Soma Mashe", "Tribal Mural"],
                 "is_featured": True
             },
@@ -923,7 +930,7 @@ def seed_database():
                 "iconography_analysis": "Centripetal spiral motion mirrors the celestial movement of stars and the cyclical agricultural calendar.",
                 "provenance": "Lalit Kala Akademi Western Regional Exhibition Archive.",
                 "verification_source": "Lalit Kala Akademi Permanent Tribal Collection #LKA-1985-WRL",
-                "image_url": "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80",
+                "image_url": "images/art-forms/warli.jpg",
                 "tags": ["Tarpa Dance", "Harvest Ritual", "Cosmic Spiral"],
                 "is_featured": False
             },
@@ -944,7 +951,7 @@ def seed_database():
                 "iconography_analysis": "Cosmological fertility diagram ensuring lineage continuity and divine protection for newlyweds.",
                 "provenance": "Commissioned during the All India Handicrafts Board drought relief revival led by Pupul Jayakar.",
                 "verification_source": "All India Handicrafts Board Archival Register #AIHB-MDB-72-108",
-                "image_url": "https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=800&q=80",
+                "image_url": "images/art-forms/madhubani.jpg",
                 "tags": ["Kohbar", "Sita Devi", "Bharni Style", "Bridal Chamber"],
                 "is_featured": True
             },
@@ -964,7 +971,7 @@ def seed_database():
                 "iconography_analysis": "Demonstrates the extreme microscopic precision of Katchni hatching, where no solid colors are used—only tone created through line density.",
                 "provenance": "Ranti Master Artisan Trust Archive.",
                 "verification_source": "Bihar State Crafts Council Monograph Series #BCC-MDB-80",
-                "image_url": "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80",
+                "image_url": "images/art-forms/madhubani.jpg",
                 "tags": ["Katchni Line", "Matsya Avatara", "Mahasundari Devi"],
                 "is_featured": False
             },
@@ -985,7 +992,7 @@ def seed_database():
                 "iconography_analysis": "Yantric protective diagram combining cardinal compass alignments with solar invocations.",
                 "provenance": "Indira Gandhi National Centre for the Arts field survey in Hadoti.",
                 "verification_source": "IGNCA Archival Register #IGNCA-RAJ-MND-92",
-                "image_url": "https://images.unsplash.com/photo-1579783901586-d88db74b4fe4?auto=format&fit=crop&w=800&q=80",
+                "image_url": "images/art-forms/mandana.jpg",
                 "tags": ["Diwali Ritual", "Meena Tribe", "Yantric Architecture", "Floor Mandala"],
                 "is_featured": True
             },
@@ -1006,7 +1013,7 @@ def seed_database():
                 "iconography_analysis": "Visual manifestation of the Pardhan Gond song of creation, where the world emerged from primordial water through the cooperation of a crow and a worm.",
                 "provenance": "Bharat Bhavan Bhopal Permanent Collection.",
                 "verification_source": "Roopankar Museum of Fine Arts, Bharat Bhavan Archive #BB-R-89-GND-01",
-                "image_url": "https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=800&q=80",
+                "image_url": "images/art-forms/gond.jpg",
                 "tags": ["Jangarh Kalam", "Mahua Tree", "Animism", "Pardhan Lore"],
                 "is_featured": True
             },
@@ -1027,7 +1034,7 @@ def seed_database():
                 "iconography_analysis": "Illustrates the philosophical synthesis of all earthly life forms in the singular body of God.",
                 "provenance": "Odisha State Crafts Museum (Kala Bhoomi) Historic Archive.",
                 "verification_source": "Kala Bhoomi Crafts Museum Accession #KB-PAT-1968-07",
-                "image_url": "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=800&q=80",
+                "image_url": "images/art-forms/pattachitra.jpg",
                 "tags": ["Navagunjara", "Mahabharata", "Raghurajpur", "Mineral Pigments"],
                 "is_featured": True
             },
@@ -1048,7 +1055,7 @@ def seed_database():
                 "iconography_analysis": "Combines ancient Chola sacred iconography with organic indigo and madder dyeing techniques.",
                 "provenance": "Crafts Council of Andhra Pradesh Master Collection.",
                 "verification_source": "National Crafts Museum New Delhi Permanent Kalamkari Archive #NCM-KLM-1975-01",
-                "image_url": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
+                "image_url": "images/art-forms/kalamkari.jpg",
                 "tags": ["Tree of Life", "Srikalahasti", "Natural Dyes", "23 Stage Process"],
                 "is_featured": True
             },
@@ -1069,7 +1076,7 @@ def seed_database():
                 "iconography_analysis": "The largest portable temple scroll tradition in South Asia, structured spatially rather than chronologically: the hero sits at the center while simultaneous events unfold across the entire canvas.",
                 "provenance": "Commissioned for the National Folklore Documentation Project.",
                 "verification_source": "Sangeet Natak Akademi Folk Arts Archive #SNA-PHD-70-01",
-                "image_url": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                "image_url": "images/art-forms/phad.jpg",
                 "tags": ["Pabuji Epic", "Shrilal Joshi", "30-Foot Scroll", "Portable Temple"],
                 "is_featured": True
             },
@@ -1091,7 +1098,7 @@ def seed_database():
                 "iconography_analysis": "Practitioner oral interpretation reflecting contemporary environmental concerns through ancient Mithila visual syntax.",
                 "provenance": "Submitted directly to Sanskruti Community Practitioner Desk by Jitwarpur Mahila Kalakar Sangh.",
                 "verification_source": "Community Field Vetting #COM-JIT-2024-03",
-                "image_url": "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80",
+                "image_url": "images/art-forms/madhubani.jpg",
                 "tags": ["Community Knowledge", "Oral Lore", "Living Tradition"],
                 "is_featured": False
             },
@@ -1111,7 +1118,7 @@ def seed_database():
                 "iconography_analysis": "Passed down verbally for four generations without written grids, demonstrating procedural memory in domestic arts.",
                 "provenance": "Contributed via Sanskruti Oral History Archive by practitioner family.",
                 "verification_source": "Practitioner Oral Submission #COM-TN-KOL-2024",
-                "image_url": "https://images.unsplash.com/photo-1582738411706-bfc8e691d1c2?auto=format&fit=crop&w=800&q=80",
+                "image_url": "images/art-forms/kolam.jpg",
                 "tags": ["Community Knowledge", "Izhai Kolam", "Oral Tradition", "Thanjavur"],
                 "is_featured": False
             },
@@ -1133,17 +1140,25 @@ def seed_database():
                 "iconography_analysis": "Reveals that human spacing expands at outer rims and tightens predictably at the inner sanctum, corroborating tribal acoustic pacing.",
                 "provenance": "Synthesized by Sanskruti Intelligence Engine using verified photographs from IGNCA archive.",
                 "verification_source": "Sanskruti AI Analysis Log #AI-AN-2026-WRL-01",
-                "image_url": "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=800&q=80",
+                "image_url": "images/art-forms/warli.jpg",
                 "tags": ["AI Cultural Interpretation", "Topology", "Archimedean Spiral", "Scholarly Modeling"],
                 "is_featured": False
             }
         ]
 
         for art_data in artifacts_data:
-            artifact = Artifact(**art_data)
-            db.add(artifact)
-            db.flush()
-            print(f"Added artifact [{artifact.information_layer}]: {artifact.title}")
+            acc = art_data["accession_number"]
+            existing_art = db.query(Artifact).filter(Artifact.accession_number == acc).first()
+            if existing_art:
+                for k, v in art_data.items():
+                    setattr(existing_art, k, v)
+                print(f"Updated artifact [{existing_art.information_layer}]: {acc}")
+            else:
+                artifact = Artifact(**art_data)
+                db.add(artifact)
+                db.flush()
+                print(f"Created artifact [{artifact.information_layer}]: {acc}")
+        db.flush()
 
         # Insert authentic Practitioner & Community Contributions
         practitioner_entries = [
@@ -1164,7 +1179,7 @@ def seed_database():
                     "Modern tap water with chlorine kills the red of the madder root."
                 ),
                 "lineage_tradition": "Sri Kalahasti Gurappa Chetty Hereditary Guru-Shishya Lineage",
-                "media_url": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80",
+                "media_url": "images/art-forms/kalamkari.jpg",
                 "information_layer": InformationLayer.COMMUNITY.value,
                 "verification_status": VerificationStatus.VERIFIED_BY_ARCHIVIST.value
             },
@@ -1186,7 +1201,7 @@ def seed_database():
                     "When it is given to the Bhopa priest, he sprinkles holy water and performs an Aarti."
                 ),
                 "lineage_tradition": "Shahpura Joshi Gharana (Lineage of Shrilal Joshi)",
-                "media_url": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=600&q=80",
+                "media_url": "images/art-forms/phad.jpg",
                 "information_layer": InformationLayer.COMMUNITY.value,
                 "verification_status": VerificationStatus.VERIFIED_BY_ARCHIVIST.value
             },
@@ -1206,16 +1221,31 @@ def seed_database():
                     "The hatching (Katchni) between them is the breath that connects them."
                 ),
                 "lineage_tradition": "Ranti Mahasundari Devi Matrilineal Lineage",
-                "media_url": "https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=600&q=80",
+                "media_url": "images/art-forms/madhubani.jpg",
                 "information_layer": InformationLayer.COMMUNITY.value,
                 "verification_status": VerificationStatus.VERIFIED_BY_ARCHIVIST.value
             }
         ]
 
+        from datetime import datetime
         for p_data in practitioner_entries:
-            pe = PractitionerEntry(**p_data)
-            db.add(pe)
-            print(f"Added practitioner entry: {pe.contributor_name} ({pe.title})")
+            title = p_data["title"]
+            contributor = p_data["contributor_name"]
+            p_data["verification_status"] = VerificationStatus.PUBLISHED.value
+            p_data["reviewed_by"] = "National Crafts Archive Board"
+            p_data["published_at"] = datetime.utcnow()
+            existing_pe = db.query(PractitionerEntry).filter(
+                PractitionerEntry.contributor_name == contributor,
+                PractitionerEntry.title == title
+            ).first()
+            if existing_pe:
+                for k, v in p_data.items():
+                    setattr(existing_pe, k, v)
+                print(f"Updated practitioner entry: {contributor} ({title})")
+            else:
+                pe = PractitionerEntry(**p_data)
+                db.add(pe)
+                print(f"Created practitioner entry: {contributor} ({title})")
 
         db.commit()
         print("\nDatabase successfully seeded with authentic archival data, verified citations, and practitioner entries!")

@@ -1,33 +1,41 @@
 # Sanskruti System Architecture
 
 ## 1. Architectural Philosophy
-Sanskriti is designed according to the principle:
+Sanskriti is designed according to the archive-first principle:
 ```
-DIGITAL ARCHIVE
+DIGITAL ARCHIVE (PostgreSQL / SQLAlchemy)
       ↓
-STRUCTURED CULTURAL KNOWLEDGE
+STRUCTURED CULTURAL KNOWLEDGE & CANONICAL MOTIFS
       ↓
 SEARCH / DISCOVERY / EXPLORATION
       ↓
-AI INTELLIGENCE LAYER
+CURATOR EDITORIAL DESK & GOVERNANCE
+      ↓
+AI INTELLIGENCE LAYER (Optional & Non-blocking)
 ```
 
-The platform's primary duty is cultural preservation. The archive remains completely functional and informative even if all AI components are disconnected.
+The platform's primary duty is cultural preservation. The archive remains completely functional and authoritative even if all AI components are disconnected.
 
 ## 2. Monorepo Organization
-- `backend/`: FastAPI Python application
-  - `app/api/v1/`: Endpoints for art forms, artifacts, search, practitioners, AI, stats, and media.
-  - `app/core/`: Configuration and settings.
-  - `app/database/`: SQLAlchemy engine and session management.
-  - `app/models/`: Declarative models for ArtForm, Artifact, PractitionerEntry, AIQueryLog.
-  - `app/schemas/`: Pydantic request/response validation schemas.
-  - `app/services/`: Media storage abstraction (`LocalStorageService`) and `AIService` (Gemini RAG & Archival Synthesis).
-  - `app/repositories/`: Query logic for multi-faceted search, layer filtering, and stats.
-- `database/`: Database seeding scripts and migrations.
-- `frontend/`: React 18, Vite, TypeScript, Tailwind CSS
+- `backend/`: FastAPI Python full-stack backend
+  - `alembic/`: Reproducible, versioned database migrations (`96f84f064bd8_initial_archival_schema.py`).
+  - `app/api/v1/`: REST API routers for `art_forms`, `artifacts`, `search` (with canonical motifs), `practitioners`, `curator` editorial desk, `media` upload, `ai`, and `health`.
+  - `app/core/`: Configuration (`config.py`) and security boundary (`security.py`).
+  - `app/database/`: SQLAlchemy engine, session management, and `get_db` lifecycle.
+  - `app/models/`: Declarative models for `ArtForm`, `Artifact`, `PractitionerEntry`, and `AIQueryLog`.
+  - `app/schemas/`: Pydantic v2 schemas for request validation and response serialization.
+  - `app/repositories/`: Data-access repository layer for multi-faceted search, curation transitions, and layer filtering.
+  - `app/services/`: Media storage service (`LocalStorageService`) and `AIService` (Grounded archival synthesis).
+  - `tests/`: Comprehensive 23-test pytest suite using isolated in-memory SQLite database.
+- `database/`: Idempotent database seeding scripts (`seed_data.py`).
+- `frontend/`: React 19, React Router v7, Vite, TypeScript, Tailwind CSS
   - `src/components/common/`: Reusable components (`LayerBadge`, `PreservationBadge`, `Navbar`, `Footer`, `ArtFormCard`, `ArtifactCard`).
-  - `src/pages/`: Page views (`HomePage`, `ExplorePage`, `ArtFormDetailPage`, `ArtifactDetailPage`, `AskSanskrutiPage`, `ContributePage`, `AboutPage`).
-  - `src/services/api.ts`: API client connecting to FastAPI backend with proxy configuration.
+  - `src/pages/`: Page views (`HomePage`, `ExplorePage` with fixed Motifs tab, `ArtFormDetailPage`, `ArtifactDetailPage`, `AskSanskrutiPage`, `ContributePage`, `CuratorPage`, `AboutPage`).
+  - `src/services/api.ts`: Authoritative API client connecting to FastAPI backend with explicit demo fallback support.
+  - `src/tests/`: Node native test runner test suite covering media formatting, key isolation, dataset integrity, and four-layer validation.
+- `docker-compose.yml`: Multi-container production deployment linking PostgreSQL 16, FastAPI, and Nginx-served React frontend.
 
-## 3. Extensibility
-The system is data-driven. New art forms, canonical motifs, traditional pigments, and artifacts can be ingested without any code modifications.
+## 3. Data Governance and Epistemic Integrity
+- Public submissions to `/api/v1/practitioners` are persisted under `PENDING_REVIEW` and cannot self-publish.
+- Only authenticated curators using the server-configured `CURATOR_API_KEY` can approve, publish, reject, or archive entries via `/api/v1/curator/submissions/{id}/review`.
+- Uploads to `/api/v1/media/upload` are restricted to authorized curators, enforce 10MB chunked streaming, and verify image byte validity with Pillow before writing unique filenames to persistent storage.

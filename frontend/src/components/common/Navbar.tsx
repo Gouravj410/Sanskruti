@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Search, Sparkles, BookOpen, Layers, Users, Info, Menu, X } from 'lucide-react';
+import { Search, Sparkles, BookOpen, Layers, Users, Menu, X } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

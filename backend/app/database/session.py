@@ -2,15 +2,25 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 from app.core.config import settings
 
-# Engine setup
+# Normalize cloud PostgreSQL URLs (e.g., Supabase / Neon / Render use postgres://)
+raw_db_url = settings.DATABASE_URL
+if raw_db_url.startswith("postgres://"):
+    raw_db_url = raw_db_url.replace("postgres://", "postgresql://", 1)
+
 connect_args = {}
-if settings.DATABASE_URL.startswith("sqlite"):
-    connect_args = {"check_same_thread": False}
+engine_kwargs = {"echo": False}
+
+if raw_db_url.startswith("sqlite"):
+    connect_args["check_same_thread"] = False
+else:
+    # Cloud PostgreSQL pooling & health ping
+    engine_kwargs["pool_pre_ping"] = True
+    engine_kwargs["pool_recycle"] = 300
 
 engine = create_engine(
-    settings.DATABASE_URL,
+    raw_db_url,
     connect_args=connect_args,
-    echo=False
+    **engine_kwargs
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -23,3 +33,8 @@ def get_db():
         yield db
     finally:
         db.close()
+
+def init_db():
+    """Create all tables in the active database (local or cloud)."""
+    import app.models  # noqa: F401
+    Base.metadata.create_all(bind=engine)

@@ -1,25 +1,61 @@
 version: '3.8'
 
 services:
+  db:
+    image: postgres:16-alpine
+    container_name: sanskruti-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-sanskruti}
+      POSTGRES_USER: ${POSTGRES_USER:-sanskruti_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me_in_production}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-sanskruti_user} -d ${POSTGRES_DB:-sanskruti}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    container_name: sanskruti-backend
+    restart: unless-stopped
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=sqlite:///./sanskruti.db
+      - DATABASE_URL=${DATABASE_URL:-postgresql://sanskruti_user:change_me_in_production@db:5432/sanskruti}
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - CURATOR_API_KEY=${CURATOR_API_KEY:-}
+      - CORS_ORIGINS=${CORS_ORIGINS:-["http://localhost:5173","http://localhost:80","http://127.0.0.1:5173","http://127.0.0.1:80"]}
       - GEMINI_API_KEY=${GEMINI_API_KEY:-}
-      - ENVIRONMENT=production
+      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-2.0-flash}
     volumes:
       - ./backend/media_storage:/app/media_storage
-      - ./backend/sanskruti.db:/app/sanskruti.db
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    container_name: sanskruti-frontend
+    restart: unless-stopped
     ports:
       - "5173:80"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

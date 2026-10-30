@@ -7,13 +7,8 @@ import {
   BookOpen,
   Sparkles,
   ShieldCheck,
-  Users,
   Feather,
   Hammer,
-  HelpCircle,
-  ArrowRight,
-  ExternalLink,
-  ChevronDown,
 } from 'lucide-react';
 import { api } from '../services/api';
 import { ArtFormDetail, ArtifactSummary, PractitionerEntry, AskSanskrutiResponse } from '../types';

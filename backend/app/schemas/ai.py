@@ -12,6 +12,7 @@ class SourceCitation(BaseModel):
 class AskSanskrutiRequest(BaseModel):
     question: str = Field(..., min_length=3, max_length=1000)
     art_form_slug: Optional[str] = None
+    gemini_api_key: Optional[str] = None
 
 class GroundedArtifactRef(BaseModel):
     id: int
@@ -31,6 +32,9 @@ class AskSanskrutiResponse(BaseModel):
     context_art_form: Optional[str] = None
     sources_cited: List[SourceCitation] = []
     grounded_artifacts: List[GroundedArtifactRef] = []
+    retrieved_motifs: List[Dict[str, Any]] = []
+    retrieved_materials: List[Dict[str, Any]] = []
+    grounding_stats: Optional[Dict[str, Any]] = None
     disclaimer: str = (
         "AI Cultural Interpretation Layer: This response is synthesized by AI using verified records "
         "from the Sanskruti Digital Cultural Archive. It does not replace indigenous practitioner lineage "

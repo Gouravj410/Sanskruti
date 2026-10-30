@@ -5,19 +5,14 @@ import {
   Sparkles,
   ShieldCheck,
   Users,
-  Compass,
   ArrowRight,
   Layers,
-  MapPin,
-  Flame,
-  Award,
   ChevronRight,
 } from 'lucide-react';
 import { api } from '../services/api';
 import { ArtFormSummary, ArtifactSummary, ArchiveStats } from '../types';
 import { ArtFormCard } from '../components/common/ArtFormCard';
 import { ArtifactCard } from '../components/common/ArtifactCard';
-import { LayerBadge } from '../components/common/LayerBadge';
 
 export const HomePage: React.FC = () => {
   const [artForms, setArtForms] = useState<ArtFormSummary[]>([]);

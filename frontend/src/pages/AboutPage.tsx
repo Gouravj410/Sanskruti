@@ -5,11 +5,7 @@ import {
   Users,
   Sparkles,
   Layers,
-  BookOpen,
-  CheckCircle2,
-  ArrowRight,
   Database,
-  Lock,
 } from 'lucide-react';
 
 export const AboutPage: React.FC = () => {

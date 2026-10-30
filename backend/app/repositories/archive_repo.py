@@ -92,7 +92,8 @@ class ArchiveRepository:
         db: Session,
         art_form_id: Optional[int] = None,
         art_form_slug: Optional[str] = None,
-        status: Optional[str] = None
+        status: Optional[str] = None,
+        include_unreviewed: bool = False
     ) -> List[PractitionerEntry]:
         query = db.query(PractitionerEntry).join(ArtForm)
         
@@ -102,6 +103,16 @@ class ArchiveRepository:
             query = query.filter(ArtForm.slug == art_form_slug)
         if status:
             query = query.filter(PractitionerEntry.verification_status == status)
+        elif not include_unreviewed:
+            # Public archive records: only show approved/published entries
+            query = query.filter(
+                PractitionerEntry.verification_status.in_([
+                    VerificationStatus.PUBLISHED.value,
+                    VerificationStatus.APPROVED.value,
+                    "COMMUNITY_VETTED",
+                    "VERIFIED_BY_ARCHIVIST"
+                ])
+            )
             
         return query.order_by(PractitionerEntry.id.desc()).all()
 
@@ -109,6 +120,46 @@ class ArchiveRepository:
     def create_practitioner_entry(db: Session, entry_data: dict) -> PractitionerEntry:
         entry = PractitionerEntry(**entry_data)
         db.add(entry)
+        db.commit()
+        db.refresh(entry)
+        return entry
+
+    @staticmethod
+    def review_practitioner_entry(
+        db: Session,
+        entry_id: int,
+        action: str,
+        curator_notes: Optional[str] = None,
+        reviewer_name: Optional[str] = None
+    ) -> Optional[PractitionerEntry]:
+        from datetime import datetime
+        entry = db.query(PractitionerEntry).filter(PractitionerEntry.id == entry_id).first()
+        if not entry:
+            return None
+        
+        now = datetime.utcnow()
+        act = action.upper().strip()
+        if act in ["APPROVE", "APPROVED"]:
+            entry.verification_status = VerificationStatus.APPROVED.value
+            entry.reviewed_at = now
+            entry.reviewed_by = reviewer_name or "Archivist"
+        elif act in ["PUBLISH", "PUBLISHED"]:
+            entry.verification_status = VerificationStatus.PUBLISHED.value
+            entry.reviewed_at = now
+            entry.reviewed_by = reviewer_name or "Archivist"
+            entry.published_at = now
+        elif act in ["REJECT", "REJECTED"]:
+            entry.verification_status = VerificationStatus.REJECTED.value
+            entry.reviewed_at = now
+            entry.reviewed_by = reviewer_name or "Archivist"
+        elif act in ["ARCHIVE", "ARCHIVED"]:
+            entry.verification_status = VerificationStatus.ARCHIVED.value
+        else:
+            raise ValueError(f"Invalid review action: '{action}'. Allowed: APPROVE, PUBLISH, REJECT, ARCHIVE")
+        
+        if curator_notes:
+            entry.curator_notes = curator_notes
+            
         db.commit()
         db.refresh(entry)
         return entry

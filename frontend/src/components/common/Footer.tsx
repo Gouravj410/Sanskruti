@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ShieldCheck, Users, Sparkles, Wand2, Compass, Heart } from 'lucide-react';
+import { ShieldCheck, Users, Sparkles, Wand2, Heart } from 'lucide-react';
+
+const CURRENT_YEAR = new Date().getFullYear();
 
 export const Footer: React.FC = () => {
   return (
@@ -95,6 +97,7 @@ export const Footer: React.FC = () => {
               <li><Link to="/explore" className="hover:text-amber-300 transition-colors">Digital Archive Explorer</Link></li>
               <li><Link to="/ask" className="hover:text-purple-300 transition-colors">Ask Sanskruti AI Console</Link></li>
               <li><Link to="/contribute" className="hover:text-sky-300 transition-colors">Practitioner Desk & Oral Lore</Link></li>
+              <li><Link to="/curator" className="hover:text-amber-300 transition-colors">Curator Editorial Desk</Link></li>
               <li><Link to="/about" className="hover:text-amber-300 transition-colors">Archival Principles & Manifesto</Link></li>
             </ul>
           </div>
@@ -113,7 +116,7 @@ export const Footer: React.FC = () => {
         </div>
 
         <div className="mt-12 pt-6 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
-          <p>© {new Date().getFullYear()} Sanskruti Cultural Archive. Built for cultural preservation.</p>
+          <p>© {CURRENT_YEAR} Sanskruti Cultural Archive. Built for cultural preservation.</p>
           <p className="mt-2 sm:mt-0 flex items-center gap-1">
             Engineered with scholarly integrity <Heart className="w-3 h-3 text-rose-500 fill-rose-500 inline" />
           </p>

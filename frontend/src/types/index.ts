@@ -2,13 +2,29 @@ export type InformationLayer = 'VERIFIED' | 'COMMUNITY' | 'AI_INTERPRETATION' | 
 
 export type PreservationStatus = 'THRIVING' | 'LIVING' | 'VULNERABLE' | 'ENDANGERED' | 'CRITICALLY_ENDANGERED';
 
-export type VerificationStatus = 'VERIFIED_BY_ARCHIVIST' | 'COMMUNITY_VETTED' | 'PENDING_REVIEW';
+export type VerificationStatus =
+  | 'DRAFT'
+  | 'PENDING_REVIEW'
+  | 'APPROVED'
+  | 'PUBLISHED'
+  | 'REJECTED'
+  | 'ARCHIVED'
+  | 'VERIFIED_BY_ARCHIVIST'
+  | 'COMMUNITY_VETTED';
 
 export interface CanonicalMotif {
   name: string;
   symbolism: string;
   visual_cue: string;
   cultural_meaning?: string;
+}
+
+export interface CanonicalMotifItem extends CanonicalMotif {
+  id: string;
+  art_form_name: string;
+  art_form_slug: string;
+  region: string;
+  sources?: ArchivalSource[];
 }
 
 export interface TraditionalMaterial {
@@ -111,6 +127,10 @@ export interface PractitionerEntry {
   media_url?: string;
   information_layer: InformationLayer;
   verification_status: VerificationStatus;
+  curator_notes?: string;
+  reviewed_at?: string;
+  reviewed_by?: string;
+  published_at?: string;
   created_at: string;
 }
 
@@ -141,6 +161,29 @@ export interface AskSanskrutiResponse {
   context_art_form?: string;
   sources_cited: SourceCitation[];
   grounded_artifacts: GroundedArtifactRef[];
+  retrieved_motifs?: Array<{
+    name: string;
+    symbolism: string;
+    visual_cue?: string;
+    art_form_name?: string;
+    art_form_slug?: string;
+  }>;
+  retrieved_materials?: Array<{
+    name: string;
+    category?: string;
+    natural_source?: string;
+    preparation?: string;
+    art_form_name?: string;
+  }>;
+  grounding_stats?: {
+    art_forms_matched?: number;
+    artifacts_retrieved?: number;
+    motifs_retrieved?: number;
+    materials_retrieved?: number;
+    practitioner_records?: number;
+    sources_cited_count?: number;
+    retrieval_method?: string;
+  };
   disclaimer: string;
 }
 
